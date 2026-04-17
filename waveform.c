@@ -28,8 +28,7 @@ void analyze_phase(WaveformSample *data, int num_samples, int phase, PhaseMetric
         sum_sq += (v * v);
         if (v > max_val) max_val = v;
         if (v < min_val) min_val = v;
-        
-        // Requirement 8: Detect clipping
+
         if (fabs(v) >= CLIPPING_THRESHOLD) {
             metrics->is_clipped = 1;
             set_flags(ptr, phase, FLAG_CLIPPING);
@@ -42,7 +41,6 @@ void analyze_phase(WaveformSample *data, int num_samples, int phase, PhaseMetric
         metrics->is_compliant = 1;
     } else {
         metrics->is_compliant = 0;
-        // Flag all samples as out of tolerance for this phase
         for (WaveformSample *ptr = data; ptr < end; ptr++) {
             set_flags(ptr, phase, FLAG_OUT_TOLERANCE);
         }

@@ -41,20 +41,31 @@ WaveformSample* load_data(const char *filename, int *num_samples) {
     }
 
     char buffer[MAX_LINE_LENGTH];
-    fgets(buffer, MAX_LINE_LENGTH, file);
+    if (fgets(buffer, MAX_LINE_LENGTH, file) == NULL) {
+        printf("Error: Empty or invalid file: %s\n", filename);
+        fclose(file);
+        free(data);
+        return NULL;
+    }
 
     int i = 0;
     WaveformSample *ptr = data;
-    while (fgets(buffer, MAX_LINE_LENGTH, file) != NULL && i < count) {
-        sscanf(buffer, "%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf",
-               &(ptr->timestamp),
-               &(ptr->phase_A_voltage),
-               &(ptr->phase_B_voltage),
-               &(ptr->phase_C_voltage),
-               &(ptr->line_current),
-               &(ptr->frequency),
-               &(ptr->power_factor),
-               &(ptr->thd_percent));
+
+    while (i < count && fgets(buffer, MAX_LINE_LENGTH, file) != NULL) {
+        int parsed = sscanf(buffer, "%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf",
+                            &ptr->timestamp,
+                            &ptr->phase_A_voltage,
+                            &ptr->phase_B_voltage,
+                            &ptr->phase_C_voltage,
+                            &ptr->line_current,
+                            &ptr->frequency,
+                            &ptr->power_factor,
+                            &ptr->thd_percent);
+
+        if (parsed != 8) {
+            printf("Warning: Skipping malformed row %d in %s\n", i + 2, filename);
+            continue;
+        }
 
         ptr->status_A = 0;
         ptr->status_B = 0;
@@ -64,7 +75,7 @@ WaveformSample* load_data(const char *filename, int *num_samples) {
         i++;
     }
 
-    *num_samples = count;
+    *num_samples = i;
     fclose(file);
     return data;
 }
