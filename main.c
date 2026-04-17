@@ -12,7 +12,9 @@ int main(int argc, char *argv[]) {
 
     int max_files = (argc > 1) ? argc : 2;
 
-    remove("results.txt");
+    //remove("results.txt");
+    const char *output_file = "../results.txt";
+    remove(output_file);
 
     for (int i = start_idx; i < max_files; i++) {
         const char *current_file = (argc > 1) ? argv[i] : "power_quality_log.csv";
@@ -33,7 +35,9 @@ int main(int argc, char *argv[]) {
         analyze_phase(data, num_samples, 1, &metricsB);
         analyze_phase(data, num_samples, 2, &metricsC);
 
-        export_results("results.txt", current_file, &metricsA, &metricsB, &metricsC);
+        //export_results("results.txt", current_file, &metricsA, &metricsB, &metricsC);
+        export_results(output_file, current_file, &metricsA, &metricsB, &metricsC);
+        printf("Results written to %s\n", output_file);
 
         WaveformSample **sorted_ptrs = malloc(num_samples * sizeof(WaveformSample*));
         if (sorted_ptrs) {

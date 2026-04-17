@@ -11,5 +11,6 @@ add_executable(courseworkpfe
         io.c)
 
 file(COPY power_quality_log.csv DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY results.txt DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 target_link_libraries(courseworkpfe m)
