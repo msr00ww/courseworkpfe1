@@ -67,9 +67,12 @@ WaveformSample* load_data(const char *filename, int *num_samples) {
             continue;
         }
 
-        ptr->status_A = 0;
-        ptr->status_B = 0;
-        ptr->status_C = 0;
+        // ptr->status_A = 0;
+        // ptr->status_B = 0;
+        // ptr->status_C = 0;
+        ptr->is_clipped_A = 0;
+        ptr->is_clipped_B = 0;
+        ptr->is_clipped_C = 0;
 
         ptr++;
         i++;
@@ -91,11 +94,11 @@ void export_results(const char *filename, const char *source_file, PhaseMetrics 
     fprintf(file, "Phase | RMS (V) | P2P (V) | DC Offset (V) | Std Dev | Clipped | Compliant\n");
     fprintf(file, "-------------------------------------------------------------------------\n");
     fprintf(file, "  A   | %7.2f | %7.2f | %13.4f | %7.2f | %-7s | %-9s\n",
-            mA->rms, mA->p2p, mA->dc_offset, mA->std_dev, mA->is_clipped ? "YES" : "NO", mA->is_compliant ? "YES" : "NO");
+            mA->rms, mA->p2p, mA->dc_offset, mA->std_dev, (mA->health_status & FLAG_CLIPPING) ? "YES" : "NO", mA->is_compliant ? "YES" : "NO");
     fprintf(file, "  B   | %7.2f | %7.2f | %13.4f | %7.2f | %-7s | %-9s\n",
-            mB->rms, mB->p2p, mB->dc_offset, mB->std_dev, mB->is_clipped ? "YES" : "NO", mB->is_compliant ? "YES" : "NO");
+            mB->rms, mB->p2p, mB->dc_offset, mB->std_dev, (mB->health_status & FLAG_CLIPPING) ? "YES" : "NO", mB->is_compliant ? "YES" : "NO");
     fprintf(file, "  C   | %7.2f | %7.2f | %13.4f | %7.2f | %-7s | %-9s\n",
-            mC->rms, mC->p2p, mC->dc_offset, mC->std_dev, mC->is_clipped ? "YES" : "NO", mC->is_compliant ? "YES" : "NO");
+            mC->rms, mC->p2p, mC->dc_offset, mC->std_dev, (mC->health_status & FLAG_CLIPPING) ? "YES" : "NO", mC->is_compliant ? "YES" : "NO");
     fprintf(file, "\n");
 
     fclose(file);
