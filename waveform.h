@@ -24,9 +24,9 @@ typedef struct {
     int is_clipped_B;
     int is_clipped_C;
 
-    // uint8_t status_A;
-    // uint8_t status_B;
-    // uint8_t status_C;
+    uint8_t status_A;
+    uint8_t status_B;
+    uint8_t status_C;
 } WaveformSample;
 
 typedef struct {
@@ -35,7 +35,6 @@ typedef struct {
     double dc_offset;
     double variance;
     double std_dev;
-    // int is_clipped;
     int is_compliant;
 
     uint8_t health_status;
@@ -43,5 +42,6 @@ typedef struct {
 
 void analyze_phase(WaveformSample *data, int num_samples, int phase, PhaseMetrics *metrics);
 void perform_custom_sort(WaveformSample **ptrs, int num_samples, int phase);
+double get_sample_voltage(WaveformSample *sample, int phase);
 
 #endif
