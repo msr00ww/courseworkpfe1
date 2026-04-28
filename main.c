@@ -11,8 +11,6 @@ int main(int argc, char *argv[]) {
     }
 
     int max_files = (argc > 1) ? argc : 2;
-
-    //remove("results.txt");
     const char *output_file = "../results.txt";
     remove(output_file);
 
@@ -35,7 +33,6 @@ int main(int argc, char *argv[]) {
         analyze_phase(data, num_samples, 1, &metricsB);
         analyze_phase(data, num_samples, 2, &metricsC);
 
-        //export_results("results.txt", current_file, &metricsA, &metricsB, &metricsC);
         export_results(output_file, current_file, &metricsA, &metricsB, &metricsC);
         printf("Results written to %s\n", output_file);
 
@@ -45,7 +42,24 @@ int main(int argc, char *argv[]) {
                 sorted_ptrs[j] = &data[j];
             }
             perform_custom_sort(sorted_ptrs, num_samples, 0);
+            export_sorted_samples(output_file, sorted_ptrs, num_samples, 0, "A");
+
+            for (int j = 0; j < num_samples; j++) {
+                sorted_ptrs[j] = &data[j];
+            }
+            perform_custom_sort(sorted_ptrs, num_samples, 1);
+            export_sorted_samples(output_file, sorted_ptrs, num_samples, 1, "B");
+
+            for (int j = 0; j < num_samples; j++) {
+                sorted_ptrs[j] = &data[j];
+            }
+            perform_custom_sort(sorted_ptrs, num_samples, 2);
+            export_sorted_samples(output_file, sorted_ptrs, num_samples, 2, "C");
+
+            printf("Sorted samples written to %s\n", output_file);
             free(sorted_ptrs);
+        } else {
+            printf("Error: Memory allocation failed for sorted sample pointers.\n");
         }
 
         free(data);
